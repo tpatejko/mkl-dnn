@@ -28,7 +28,7 @@ Hardswish in OpenVino:
 https://github.com/openvinotoolkit/openvino/blob/master/docs/ops/activation/HSwish_4.md
 
 Interface:
-```
+```html
 <layer ... type="HSwish">
     <input>
 	<port id="0">
