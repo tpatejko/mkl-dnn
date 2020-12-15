@@ -368,6 +368,12 @@ inline U gelu_erf_bwd(T dd, T s) {
             * (1.f + ::erff(v) + v * two_over_sqrt_pi * ::expf(-v * v)));
 }
 
+template <typename T, typename U = typename utils::remove_reference<T>::type>
+inline U hardswish_fwd(T s) {
+    const float frac_1_6 = 0.16666666666666666666666667f;
+    return linear_fwd(s, frac_1_6, 0.f) * bounded_relu_fwd(s + 3.f, 6.f);
+}
+
 inline bool is_eltwise_ok(
         data_type_t dt, alg_kind_t alg, float alpha, float beta) {
     using namespace alg_kind;
@@ -380,7 +386,7 @@ inline bool is_eltwise_ok(
                       eltwise_logsigmoid, eltwise_logistic, eltwise_exp,
                       eltwise_gelu_tanh, eltwise_swish, eltwise_log,
                       eltwise_clip, eltwise_clip_v2, eltwise_pow,
-                      eltwise_gelu_erf, eltwise_round)
+                      eltwise_gelu_erf, eltwise_round, eltwise_hardswish)
             && IMPLICATION(alg == eltwise_bounded_relu, alpha >= 0)
             && IMPLICATION(
                     one_of(alg, eltwise_clip, eltwise_clip_v2), beta >= alpha)

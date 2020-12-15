@@ -168,6 +168,12 @@ T gelu_erf_bwd(T dd, T s) {
             * (1.f + ::erff(v) + v * two_over_sqrt_pi * ::expf(-v * v)));
 }
 
+template <typename T>
+T hardswish_fwd(T s) {
+    const float frac_1_6 = 0.16667f;
+    return linear_fwd(s, frac_1_6, 0.f) * bounded_relu_fwd(s + 3.f, 6.f);
+}
+
 struct eltwise_test_params_t {
     algorithm alg_kind;
     memory::format_tag data_format;
@@ -214,6 +220,7 @@ void check_eltwise_fwd(const eltwise_test_params_t &p, const memory::desc &md,
             case algorithm::eltwise_gelu_tanh: ref_d = gelu_tanh_fwd(s); break;
             case algorithm::eltwise_swish: ref_d = swish_fwd(s, p.alpha); break;
             case algorithm::eltwise_gelu_erf: ref_d = gelu_erf_fwd(s); break;
+            case algorithm::eltwise_hardswish: ref_d = hardswish_fwd(s); break;
             default: assert(!"unknown alg_kind");
         }
         dst_data[i] = ref_d;
@@ -505,7 +512,8 @@ TEST_P(eltwise_test_s8, TestsEltwise) {}
             EXPAND(PARAMS(eltwise_abs, __VA_ARGS__)), \
             EXPAND(PARAMS(eltwise_exp, __VA_ARGS__)), \
             EXPAND(PARAMS(eltwise_swish, __VA_ARGS__)), \
-            EXPAND(PARAMS(eltwise_gelu_erf, __VA_ARGS__))
+            EXPAND(PARAMS(eltwise_gelu_erf, __VA_ARGS__)), \
+            EXPAND(PARAMS(eltwise_hardswish, __VA_ARGS__))
 
 #define PARAMS_ALL_ALG_SDPART(...) \
     EXPAND(PARAMS(eltwise_linear, __VA_ARGS__)), \
