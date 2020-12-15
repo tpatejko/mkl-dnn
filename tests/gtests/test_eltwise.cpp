@@ -170,7 +170,7 @@ T gelu_erf_bwd(T dd, T s) {
 
 template <typename T>
 T hardswish_fwd(T s) {
-    const float frac_1_6 = 0.16667f;
+    const float frac_1_6 = 0.1666667f;
     return linear_fwd(s, frac_1_6, 0.f) * bounded_relu_fwd(s + 3.f, 6.f);
 }
 
