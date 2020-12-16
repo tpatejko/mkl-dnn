@@ -431,6 +431,8 @@ protected:
     }
 
     void Backward() {
+        SKIP_IF(p.alg_kind == algorithm::eltwise_hardswish,
+                "Unsupported bwd for hardswish");
         SKIP_IF_CUDA(p.alg_kind != algorithm::eltwise_relu
                         && p.alg_kind != algorithm::eltwise_bounded_relu,
                 "Unsupported algorithm");

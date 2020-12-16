@@ -92,7 +92,7 @@ struct jit_uni_eltwise_injector_f32 {
                 eltwise_bounded_relu, eltwise_soft_relu, eltwise_logistic,
                 eltwise_logsigmoid, eltwise_exp, eltwise_gelu_tanh,
                 eltwise_swish, eltwise_log, eltwise_clip, eltwise_clip_v2,
-                eltwise_pow, eltwise_gelu_erf, eltwise_round,
+                eltwise_pow, eltwise_gelu_erf, eltwise_round, eltwise_hardswish,
                 eltwise_relu_use_dst_for_bwd, eltwise_tanh_use_dst_for_bwd,
                 eltwise_elu_use_dst_for_bwd, eltwise_sqrt_use_dst_for_bwd,
                 eltwise_logistic_use_dst_for_bwd, eltwise_exp_use_dst_for_bwd,
@@ -203,6 +203,7 @@ private:
     void pow_compute_vector_fwd(const Vmm &vmm_src);
     void gelu_erf_compute_vector_fwd(const Vmm &vmm_src);
     void round_compute_vector_fwd(const Vmm &vmm_src);
+    void hardswish_compute_vector_fwd(const Vmm &vmm_src);
 
     void exp_compute_vector_bwd(const Vmm &vmm_src);
     void relu_compute_vector_bwd(const Vmm &vmm_src);
@@ -231,6 +232,8 @@ private:
         half, // 0.5f
         one, // 1.f  or  mask for exponent bits
         two, // 2.f
+        three, // 3.f
+        six, // 6.f
         minus_one, // -1.f  or  changes sign to opposite
         minus_two, // -2.f
         ln2f, // 0.69314718f
